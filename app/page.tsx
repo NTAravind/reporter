@@ -22,7 +22,7 @@ export default function Home() {
     const currentAttempt = attemptRef.current
     console.log('[Poll] Checking status for scanId:', id, '| attempt:', currentAttempt)
     try {
-      const res = await fetch(`/api/report/${id}?attempt=${currentAttempt}`)
+      const res = await fetch(`/api/report/${id}`)
       const data = await res.json()
       console.log('[Poll] Response:', { status: data.status, attempt: currentAttempt, responseData: data })
       
