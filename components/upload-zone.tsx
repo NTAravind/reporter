@@ -41,6 +41,7 @@ export function UploadZone({ onSubmit, isSubmitting }: UploadZoneProps) {
       const droppedFile = e.dataTransfer.files[0]
       if (isValidFile(droppedFile)) {
         setFile(droppedFile)
+        console.log('[Upload] File selected:', { name: droppedFile.name, size: droppedFile.size, type: droppedFile.type })
       }
     }
   }, [])
@@ -50,6 +51,7 @@ export function UploadZone({ onSubmit, isSubmitting }: UploadZoneProps) {
       const selectedFile = e.target.files[0]
       if (isValidFile(selectedFile)) {
         setFile(selectedFile)
+        console.log('[Upload] File selected:', { name: selectedFile.name, size: selectedFile.size, type: selectedFile.type })
       }
     }
   }, [])

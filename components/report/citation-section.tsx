@@ -8,6 +8,7 @@ interface CitationSectionProps {
 }
 
 export function CitationSection({ citedScore, uncitedScore }: CitationSectionProps) {
+  console.log('[Citations] Cited:', citedScore, '% | Uncited:', uncitedScore, '%')
   return (
     <div className="grid grid-cols-2 gap-4">
       <Card className="border-blue-200 bg-blue-50">

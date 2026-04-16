@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { UploadZone } from '@/components/upload-zone'
 import { ReportShell } from '@/components/report/report-shell'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -15,21 +15,28 @@ export default function Home() {
   const [progress, setProgress] = useState(0)
   const [report, setReport] = useState<ReportData | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const attemptRef = useRef(0)
 
   const pollReport = useCallback(async (id: string) => {
+    attemptRef.current += 1
+    const currentAttempt = attemptRef.current
+    console.log('[Poll] Checking status for scanId:', id, '| attempt:', currentAttempt)
     try {
       const res = await fetch(`/api/report/${id}`)
       const data = await res.json()
+      console.log('[Poll] Response:', { status: data.status, attempt: currentAttempt, responseData: data })
       
       if (data.status === 'done' && data.report) {
         setReport(data.report)
         setStatus('done')
         setProgress(100)
+        console.log('[Poll] Scan complete. Report received:', data.report)
+        console.log('[Webhook] Full raw report payload:', JSON.stringify(data.report, null, 2))
       } else {
         setProgress(prev => Math.min(prev + 10, 90))
       }
     } catch (err) {
-      console.error('Polling error:', err)
+      console.log('[Poll] Error on attempt', currentAttempt, ':', err)
     }
   }, [])
 
@@ -49,11 +56,14 @@ export default function Home() {
     setError(null)
     setStatus('submitting')
     setProgress(10)
+    attemptRef.current = 0
 
     try {
       const formData = new FormData()
       formData.append('file', file)
       formData.append('filters', JSON.stringify(filters))
+
+      console.log('[Submit] Sending file to API:', { fileName: file.name, fileSizeBytes: file.size, filters })
 
       const res = await fetch('/api/copyleaks/submit', {
         method: 'POST',
@@ -68,7 +78,9 @@ export default function Home() {
       setScanId(data.scanId)
       setStatus('polling')
       setProgress(20)
+      console.log('[Submit] Scan started. scanId:', data.scanId)
     } catch (err) {
+      console.log('[Submit] Error:', err)
       setError(err instanceof Error ? err.message : 'An error occurred')
       setStatus('idle')
     }

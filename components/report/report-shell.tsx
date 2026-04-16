@@ -22,14 +22,18 @@ interface ReportShellProps {
 }
 
 export function ReportShell({ report }: ReportShellProps) {
+  console.log('[Report] Rendering report:', report)
   const [isDownloading, setIsDownloading] = useState(false)
 
   const handleDownload = async () => {
+    console.log('[PDF] Download triggered for scanId:', report.scanId)
     setIsDownloading(true)
     try {
+      console.log('[PDF] Fetching PDF from API...')
       const res = await fetch(`/api/report/${report.scanId}/pdf`)
       if (!res.ok) throw new Error('Failed to generate PDF')
       const blob = await res.blob()
+      console.log('[PDF] Blob received. Size:', blob.size, 'bytes')
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
@@ -38,8 +42,9 @@ export function ReportShell({ report }: ReportShellProps) {
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
+      console.log('[PDF] Download initiated. Filename:', `plagiarism-report-${report.scanId}.pdf`)
     } catch (err) {
-      console.error('Download error:', err)
+      console.log('[PDF] Download error:', err)
     } finally {
       setIsDownloading(false)
     }

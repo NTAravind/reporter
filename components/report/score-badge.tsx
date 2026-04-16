@@ -14,6 +14,7 @@ export function ScoreBadge({ score }: ScoreBadgeProps) {
   }
 
   const risk = getRiskLevel(score)
+  console.log('[ScoreBadge] Score:', score, '| Risk level:', risk)
   
   const getColors = (risk: 'low' | 'medium' | 'high') => {
     switch (risk) {

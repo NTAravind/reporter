@@ -16,6 +16,7 @@ interface SourcesTableProps {
 }
 
 export function SourcesTable({ sources }: SourcesTableProps) {
+  console.log('[SourcesTable] Sources:', sources)
   const getTypeBadgeVariant = (type: 'web' | 'journal' | 'database') => {
     switch (type) {
       case 'journal':

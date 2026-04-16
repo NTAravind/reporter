@@ -24,6 +24,8 @@ export function HighlightedText({ report }: HighlightedTextProps) {
     return [...matches].sort((a, b) => a.start - b.start)
   }, [matches])
 
+  console.log('[HighlightedText] Applying', matches.length, 'matches to text')
+
   const renderHighlightedText = () => {
     if (matches.length === 0) {
       return <p className="whitespace-pre-wrap leading-relaxed">{text}</p>
