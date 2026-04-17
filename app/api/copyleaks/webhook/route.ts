@@ -6,6 +6,7 @@ import { createMockReport } from '@/lib/report-parser'
 export async function POST(req: NextRequest) {
   try {
     const payload = await req.json()
+    console.log('[Webhook] Received hit from Copyleaks:', payload)
     const { scanId, status } = payload
 
     if (!scanId) {

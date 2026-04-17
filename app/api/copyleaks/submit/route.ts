@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
     const scanId = crypto.randomUUID()
     const fileBase64 = await fileToBase64(file)
     const webhookUrl = `${API_BASE_URL}/api/copyleaks/webhook`
+    console.log('[Submit] Webhook URL sent to Copyleaks:', webhookUrl)
 
     const token = await getCopyleaksToken()
     
