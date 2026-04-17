@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
     console.log('[Submit] Webhook URL sent to Copyleaks:', webhookUrl)
 
     const token = await getCopyleaksToken()
+    const useSandbox = process.env.COPYLEAKS_SANDBOX !== 'false'
     
     await submitScan({
       token,
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
       fileBase64,
       fileName: file.name,
       webhookUrl,
-      sandbox: true,
+      sandbox: useSandbox,
       ignoreReferences,
       ignoreQuotes,
       minCopiedWords,
