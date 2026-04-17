@@ -25,7 +25,8 @@ export const MATCH_TYPE_COLORS = {
   paraphrased: 'bg-yellow-200',
 } as const
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').trim().replace(/\/$/, '')
+export const API_BASE_URL = baseUrl
 
 export const POLL_INTERVAL_MS = 5000
 
