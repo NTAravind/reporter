@@ -45,33 +45,40 @@ export async function submitScan(options: SubmitScanOptions) {
     minCopiedWords = 5,
   } = options
 
+  const requestBody = {
+    base64: fileBase64,
+    filename: fileName,
+    properties: {
+      webhooks: {
+        status: `${webhookUrl}/{STATUS}/${scanId}`,
+      },
+      sandbox,
+      filters: {
+        ignoredWords: [],
+        references: ignoreReferences,
+        quotes: ignoreQuotes,
+        minCopiedWords,
+      },
+    },
+  }
+
+  console.log('[Submit] Full Copyleaks request body:', JSON.stringify(requestBody, null, 2))
+
   const res = await fetch(`${SCAN_URL}/${scanId}`, {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      base64: fileBase64,
-      filename: fileName,
-      properties: {
-        webhooks: {
-          status: `${webhookUrl}/{STATUS}/${scanId}`,
-        },
-        sandbox,
-        filters: {
-          ignoredWords: [],
-          references: ignoreReferences,
-          quotes: ignoreQuotes,
-          minCopiedWords,
-        },
-      },
-    }),
+    body: JSON.stringify(requestBody),
   })
 
+  const resText = await res.text()
+  console.log('[Submit] Copyleaks API response status:', res.status)
+  console.log('[Submit] Copyleaks API response body:', resText)
+
   if (!res.ok) {
-    const error = await res.text()
-    throw new Error(`Copyleaks submit failed: ${error}`)
+    throw new Error(`Copyleaks submit failed: ${resText}`)
   }
 }
 
